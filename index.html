@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard · Consumidor de Aderezos</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #F5F2ED;
+    --surface: #FDFCFA;
+    --surface2: #F0EDE7;
+    --border: rgba(60,45,30,0.12);
+    --border-strong: rgba(60,45,30,0.22);
+    --text: #1C1612;
+    --text-muted: #6B5F52;
+    --text-faint: #9E9186;
+    --accent: #C8450A;
+    --accent2: #1A6B4A;
+    --accent3: #1A4878;
+    --tag-f: #FDE8E0;
+    --tag-f-text: #A03008;
+    --tag-m: #E0EAF8;
+    --tag-m-text: #1A3D6B;
+    --tag-18: #E6F5EE;
+    --tag-18-text: #14583A;
+    --tag-26: #FEF3E2;
+    --tag-26-text: #7A4B10;
+    --tag-36: #F3E8FF;
+    --tag-36-text: #5B2D8E;
+    --tag-46: #FDE8E8;
+    --tag-46-text: #8B1C1C;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  /* ── HEADER ── */
+  .header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 28px 40px 24px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 24px;
+  }
+  .header-left h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 28px;
+    font-weight: 400;
+    color: var(--text);
+    letter-spacing: -0.3px;
+    line-height: 1.15;
+    margin-bottom: 4px;
+  }
+  .header-left p {
+    font-size: 13px;
+    color: var(--text-muted);
+  }
+  .header-badge {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 16px;
+    text-align: right;
+  }
+  .header-badge span {
+    display: block;
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1;
+  }
+  .header-badge small { font-size: 11px; color: var(--text-muted); }
+
+  /* ── LAYOUT ── */
+  .main { padding: 32px 40px; max-width: 1200px; margin: 0 auto; }
+
+  /* ── FILTROS ── */
+  .filters-wrap {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 22px 24px;
+    margin-bottom: 28px;
+  }
+  .filters-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+    margin-bottom: 14px;
+  }
+  .filter-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+  }
+  .filter-row:last-child { margin-bottom: 0; }
+  .filter-dim {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-muted);
+    width: 60px;
+    flex-shrink: 0;
+  }
+  .chip {
+    padding: 6px 14px;
+    border-radius: 100px;
+    border: 1px solid var(--border-strong);
+    font-size: 13px;
+    cursor: pointer;
+    background: var(--surface);
+    color: var(--text-muted);
+    transition: all 0.15s;
+    user-select: none;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .chip:hover { border-color: var(--text-muted); color: var(--text); }
+
+  .chip.active-f  { background: var(--tag-f);  color: var(--tag-f-text);  border-color: #E8A090; font-weight: 500; }
+  .chip.active-m  { background: var(--tag-m);  color: var(--tag-m-text);  border-color: #90B4E0; font-weight: 500; }
+  .chip.active-18 { background: var(--tag-18); color: var(--tag-18-text); border-color: #7FC8A0; font-weight: 500; }
+  .chip.active-26 { background: var(--tag-26); color: var(--tag-26-text); border-color: #E8C878; font-weight: 500; }
+  .chip.active-36 { background: var(--tag-36); color: var(--tag-36-text); border-color: #C090E8; font-weight: 500; }
+  .chip.active-46 { background: var(--tag-46); color: var(--tag-46-text); border-color: #E89090; font-weight: 500; }
+
+  .chip-all.active-all {
+    background: var(--text);
+    color: var(--surface);
+    border-color: var(--text);
+    font-weight: 500;
+  }
+
+  .profile-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    border-radius: 100px;
+    padding: 3px 10px;
+    font-weight: 500;
+    margin-left: 8px;
+  }
+
+  /* ── INSIGHT ── */
+  .insight {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+    border-radius: 10px;
+    padding: 14px 18px;
+    margin-bottom: 28px;
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.65;
+  }
+  .insight strong { color: var(--text); font-weight: 500; }
+
+  /* ── METRICS ── */
+  .metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+  .metric-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 18px;
+  }
+  .metric-card .m-label { font-size: 11px; color: var(--text-faint); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.06em; }
+  .metric-card .m-value { font-size: 24px; font-weight: 600; color: var(--text); line-height: 1.1; }
+  .metric-card .m-sub { font-size: 11px; color: var(--text-muted); margin-top: 3px; }
+
+  /* ── CHARTS GRID ── */
+  .charts-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+  .charts-grid-3 {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 18px 20px;
+  }
+  .card h3 {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-faint);
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    margin-bottom: 14px;
+  }
+
+  /* ── BAR ROWS ── */
+  .bar-row { display: flex; align-items: center; gap: 8px; margin-bottom: 9px; }
+  .bar-row:last-child { margin-bottom: 0; }
+  .bar-label {
+    font-size: 12px;
+    color: var(--text-muted);
+    width: 130px;
+    flex-shrink: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .bar-track {
+    flex: 1;
+    height: 16px;
+    background: var(--surface2);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .bar-fill {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.45s cubic-bezier(0.4,0,0.2,1);
+  }
+  .bar-pct { font-size: 12px; color: var(--text-muted); width: 36px; text-align: right; font-variant-numeric: tabular-nums; }
+
+  /* ── SECTION DIVIDER ── */
+  .section-sep {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 28px 0 20px;
+  }
+  .section-sep span {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.09em;
+    color: var(--text-faint);
+    white-space: nowrap;
+  }
+  .section-sep hr { flex: 1; border: none; border-top: 1px solid var(--border); }
+
+  /* ── DONUT (CSS only) ── */
+  .donut-wrap { display: flex; align-items: center; gap: 20px; }
+  .donut-legend { flex: 1; }
+  .donut-legend-item {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    margin-bottom: 8px;
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+  .donut-legend-item:last-child { margin-bottom: 0; }
+  .dot { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
+
+  /* ── LA MORENA HIGHLIGHT ── */
+  .morena-highlight {
+    background: linear-gradient(135deg, #FFF5F0 0%, #FDE8E0 100%);
+    border: 1px solid #E8A090;
+    border-radius: 12px;
+    padding: 18px 20px;
+  }
+  .morena-highlight h3 {
+    font-size: 12px;
+    font-weight: 600;
+    color: #A03008;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    margin-bottom: 14px;
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 768px) {
+    .header { flex-direction: column; align-items: flex-start; padding: 20px; }
+    .main { padding: 20px; }
+    .metrics-grid { grid-template-columns: repeat(2, 1fr); }
+    .charts-grid, .charts-grid-3 { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-left">
+    <h1>Consumidor de Aderezos</h1>
+    <p>Encuesta nacional · México · 2026 &nbsp;·&nbsp; Selecciona género y/o edad para filtrar el perfil</p>
+  </div>
+  <div class="header-badge">
+    <span>129</span>
+    <small>encuestados totales</small>
+  </div>
+</div>
+
+<div class="main">
+
+  <!-- FILTROS -->
+  <div class="filters-wrap">
+    <div class="filters-label">Filtrar perfil por</div>
+    <div class="filter-row">
+      <div class="filter-dim">Género</div>
+      <div class="chip chip-all active-all" data-type="gender" data-val="all">Todos</div>
+      <div class="chip" data-type="gender" data-val="f">Mujer</div>
+      <div class="chip" data-type="gender" data-val="m">Hombre</div>
+    </div>
+    <div class="filter-row">
+      <div class="filter-dim">Edad</div>
+      <div class="chip chip-all active-all" data-type="age" data-val="all">Todos</div>
+      <div class="chip" data-type="age" data-val="18">18–25 años</div>
+      <div class="chip" data-type="age" data-val="26">26–35 años</div>
+      <div class="chip" data-type="age" data-val="36">36–45 años</div>
+      <div class="chip" data-type="age" data-val="46">46+ años</div>
+    </div>
+  </div>
+
+  <!-- INSIGHT -->
+  <div class="insight" id="insightBox"></div>
+
+  <!-- MÉTRICAS -->
+  <div class="metrics-grid" id="metricsRow"></div>
+
+  <!-- CHARTS ROW 1 -->
+  <div class="charts-grid">
+    <div class="card">
+      <h3>Frecuencia de uso</h3>
+      <div id="freqChart"></div>
+    </div>
+    <div class="card">
+      <h3>Uso principal</h3>
+      <div id="useChart"></div>
+    </div>
+  </div>
+
+  <!-- CHARTS ROW 2 -->
+  <div class="charts-grid">
+    <div class="card">
+      <h3>Lugar de compra</h3>
+      <div id="placeChart"></div>
+    </div>
+    <div class="card">
+      <h3>Disposición a pagar</h3>
+      <div id="priceChart"></div>
+    </div>
+  </div>
+
+  <!-- CHARTS ROW 3 -->
+  <div class="charts-grid">
+    <div class="card">
+      <h3>Aderezos preferidos (1.er lugar en ranking)</h3>
+      <div id="flavorChart"></div>
+    </div>
+    <div class="card">
+      <h3>Marcas compradas con mayor frecuencia</h3>
+      <div id="brandChart"></div>
+    </div>
+  </div>
+
+  <div class="section-sep"><span>Preferencias de salud y decisión de compra</span><hr></div>
+
+  <div class="charts-grid-3">
+    <div class="card">
+      <h3>¿Qué prefieres en salud?</h3>
+      <div id="healthChart"></div>
+    </div>
+    <div class="card">
+      <h3>Tipo de compra</h3>
+      <div id="purchaseChart"></div>
+    </div>
+    <div class="card">
+      <h3>Si no hay tu marca favorita…</h3>
+      <div id="loyaltyChart"></div>
+    </div>
+  </div>
+
+  <div class="section-sep"><span>Marca La Morena</span><hr></div>
+
+  <div class="charts-grid">
+    <div class="morena-highlight card">
+      <h3>Conocimiento y compra de La Morena</h3>
+      <div id="morenaChart"></div>
+    </div>
+    <div class="card">
+      <h3>Probabilidad de volver a comprar La Morena</h3>
+      <div id="repurchaseChart"></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+/* ═══════════════════════════════════
+   DATA MODEL — por género × edad
+   Estructura: DATA[género][edad]
+   género: all | f | m
+   edad:   all | 18 | 26 | 36 | 46
+═══════════════════════════════════ */
+const DATA = {
+
+  all: {
+    all: {
+      n: 129,
+      insight: "El <strong>89%</strong> de los encuestados ha comprado aderezos. La compra se realiza principalmente en <strong>supermercado</strong> (90%) y para más de la mitad la decisión ocurre en el anaquel. El aderezo más popular es <strong>chipotle</strong>; la marca líder entre quienes compran aderezos con frecuencia es <strong>McCormick</strong>.",
+      metrics: [
+        { l: "Han comprado aderezos", v: "89%", s: "115 de 129 encuestados" },
+        { l: "Precio dispuesto a pagar", v: "$51–$100", s: "64% del total" },
+        { l: "Conocen La Morena", v: "83%", s: "89 de 107 personas" },
+        { l: "Volverían a comprar La Morena", v: "93%", s: "muy probable + probable" }
+      ],
+      freq:     [{ l:"1 vez/semana", v:60 },{ l:"2 veces/semana", v:21 },{ l:"Más de 3 veces", v:13 },{ l:"Diario", v:6 }],
+      use:      [{ l:"Ensaladas", v:37 },{ l:"Acompañamiento", v:25 },{ l:"Botanas/snacks", v:22 },{ l:"Hamburguesas/tortas", v:16 }],
+      place:    [{ l:"Supermercado", v:90 },{ l:"Abarrotes", v:6 },{ l:"Conveniencia", v:4 },{ l:"Apps/e-commerce", v:1 }],
+      price:    [{ l:"$51 a $100", v:64 },{ l:"$101 a $200", v:26 },{ l:"Menos de $50", v:8 },{ l:"Más de $200", v:1 }],
+      flavors:  [{ l:"Chipotle", v:28 },{ l:"Ranch", v:22 },{ l:"Mayonesa limón", v:19 },{ l:"Jalapeño", v:17 },{ l:"César", v:14 }],
+      brands:   [{ l:"McCormick", v:57 },{ l:"La Morena", v:16 },{ l:"Clemente Jacques", v:11 },{ l:"Hellmann's", v:10 },{ l:"La Costeña", v:6 }],
+      health:   [{ l:"Más saludable", v:48 },{ l:"El que sepa mejor", v:31 },{ l:"No lo considera", v:14 },{ l:"Tradicional", v:7 }],
+      purchase: [{ l:"Decisión en anaquel", v:56 },{ l:"Planificada", v:44 }],
+      loyalty:  [{ l:"Compra otra marca", v:71 },{ l:"Busca otra tienda", v:18 },{ l:"Compra la de oferta", v:11 }],
+      morena:   [{ l:"Conocen la marca", v:83 },{ l:"Han comprado", v:48 },{ l:"No han comprado", v:47 }],
+      repurchase:[{ l:"Muy probable", v:52 },{ l:"Probablemente", v:41 },{ l:"Poco probable", v:7 }]
+    },
+
+    /* ── TODAS LAS EDADES, GÉNERO MUJER ── */
+    f: {
+      n: 80,
+      insight: "Las <strong>mujeres</strong> representan el 62% de la muestra. Su uso principal de aderezos es en <strong>ensaladas</strong> (45%) y presentan mayor tendencia a elegir opciones saludables (55%). Compran principalmente en supermercado y su gasto habitual es de $51–$100.",
+      metrics: [
+        { l: "Segmento", v: "62%", s: "del total de compradores" },
+        { l: "Uso principal", v: "Ensaladas", s: "45% de las mujeres" },
+        { l: "Prefieren saludable", v: "55%", s: "ligeros o naturales" },
+        { l: "Compra en super", v: "92%", s: "principal punto de venta" }
+      ],
+      freq:     [{ l:"1 vez/semana", v:62 },{ l:"2 veces/semana", v:22 },{ l:"Más de 3 veces", v:11 },{ l:"Diario", v:5 }],
+      use:      [{ l:"Ensaladas", v:45 },{ l:"Acompañamiento", v:24 },{ l:"Botanas/snacks", v:20 },{ l:"Hamburguesas/tortas", v:11 }],
+      place:    [{ l:"Supermercado", v:92 },{ l:"Abarrotes", v:5 },{ l:"Conveniencia", v:2 },{ l:"Apps/e-commerce", v:1 }],
+      price:    [{ l:"$51 a $100", v:65 },{ l:"$101 a $200", v:25 },{ l:"Menos de $50", v:8 },{ l:"Más de $200", v:2 }],
+      flavors:  [{ l:"Ranch", v:26 },{ l:"Chipotle", v:25 },{ l:"César", v:20 },{ l:"Mayonesa limón", v:16 },{ l:"Jalapeño", v:13 }],
+      brands:   [{ l:"McCormick", v:54 },{ l:"Hellmann's", v:14 },{ l:"La Morena", v:14 },{ l:"Clemente Jacques", v:12 },{ l:"La Costeña", v:6 }],
+      health:   [{ l:"Más saludable", v:55 },{ l:"El que sepa mejor", v:27 },{ l:"No lo considera", v:12 },{ l:"Tradicional", v:6 }],
+      purchase: [{ l:"Decisión en anaquel", v:52 },{ l:"Planificada", v:48 }],
+      loyalty:  [{ l:"Compra otra marca", v:68 },{ l:"Busca otra tienda", v:20 },{ l:"Compra la de oferta", v:12 }],
+      morena:   [{ l:"Conocen la marca", v:82 },{ l:"Han comprado", v:50 },{ l:"No han comprado", v:45 }],
+      repurchase:[{ l:"Muy probable", v:54 },{ l:"Probablemente", v:40 },{ l:"Poco probable", v:6 }]
+    },
+
+    /* ── TODAS LAS EDADES, GÉNERO HOMBRE ── */
+    m: {
+      n: 49,
+      insight: "Los <strong>hombres</strong> representan el 38% de la muestra. Prefieren aderezos para <strong>hamburguesas, hot dogs y botanas</strong> (42%) más que las mujeres. Son más impulsivos en la compra y menos orientados a opciones saludables (38%).",
+      metrics: [
+        { l: "Segmento", v: "38%", s: "del total de compradores" },
+        { l: "Uso principal", v: "Botanas", s: "+ hamburguesas (42%)" },
+        { l: "Prefieren saludable", v: "38%", s: "menor que mujeres (55%)" },
+        { l: "Compra en anaquel", v: "62%", s: "más impulsivos que mujeres" }
+      ],
+      freq:     [{ l:"1 vez/semana", v:55 },{ l:"Más de 3 veces", v:18 },{ l:"2 veces/semana", v:17 },{ l:"Diario", v:10 }],
+      use:      [{ l:"Hamburguesas/tortas", v:28 },{ l:"Botanas/snacks", v:26 },{ l:"Ensaladas", v:24 },{ l:"Acompañamiento", v:22 }],
+      place:    [{ l:"Supermercado", v:86 },{ l:"Conveniencia", v:8 },{ l:"Abarrotes", v:4 },{ l:"Apps/e-commerce", v:2 }],
+      price:    [{ l:"$51 a $100", v:60 },{ l:"$101 a $200", v:28 },{ l:"Menos de $50", v:9 },{ l:"Más de $200", v:3 }],
+      flavors:  [{ l:"Chipotle", v:34 },{ l:"Jalapeño", v:24 },{ l:"Mayonesa limón", v:20 },{ l:"Ranch", v:14 },{ l:"Mil islas", v:8 }],
+      brands:   [{ l:"McCormick", v:52 },{ l:"La Morena", v:20 },{ l:"Clemente Jacques", v:12 },{ l:"Hellmann's", v:10 },{ l:"La Costeña", v:6 }],
+      health:   [{ l:"El que sepa mejor", v:38 },{ l:"Más saludable", v:38 },{ l:"No lo considera", v:16 },{ l:"Tradicional", v:8 }],
+      purchase: [{ l:"Decisión en anaquel", v:62 },{ l:"Planificada", v:38 }],
+      loyalty:  [{ l:"Compra otra marca", v:74 },{ l:"Busca otra tienda", v:14 },{ l:"Compra la de oferta", v:12 }],
+      morena:   [{ l:"Conocen la marca", v:84 },{ l:"Han comprado", v:45 },{ l:"No han comprado", v:50 }],
+      repurchase:[{ l:"Muy probable", v:48 },{ l:"Probablemente", v:44 },{ l:"Poco probable", v:8 }]
+    }
+  },
+
+  /* ════════ EDAD 18–25 ════════ */
+  "18": {
+    all: {
+      n: 76,
+      insight: "El grupo de <strong>18–25 años</strong> es el más numeroso (59%). Son estudiantes o recién incorporados al mercado laboral, con ingresos menores a $10,000. Priorizan el sabor y el precio; usan aderezos principalmente para <strong>botanas y snacks</strong>. Son el segmento más impulsivo en la compra.",
+      metrics: [
+        { l: "Representación", v: "59%", s: "del total de la muestra" },
+        { l: "Uso principal", v: "Botanas", s: "snacks y hamburguesas" },
+        { l: "Gasto habitual", v: "<$100", s: "sensibles al precio" },
+        { l: "Compra por impulso", v: "63%", s: "decisión en el anaquel" }
+      ],
+      freq:     [{ l:"1 vez/semana", v:58 },{ l:"2 veces/semana", v:20 },{ l:"Más de 3 veces", v:15 },{ l:"Diario", v:7 }],
+      use:      [{ l:"Botanas/snacks", v:30 },{ l:"Hamburguesas/tortas", v:26 },{ l:"Ensaladas", v:26 },{ l:"Acompañamiento", v:18 }],
+      place:    [{ l:"Supermercado", v:85 },{ l:"Conveniencia", v:8 },{ l:"Abarrotes", v:5 },{ l:"Apps/e-commerce", v:2 }],
+      price:    [{ l:"Menos de $50", v:14 },{ l:"$51 a $100", v:65 },{ l:"$101 a $200", v:20 },{ l:"Más de $200", v:1 }],
+      flavors:  [{ l:"Chipotle", v:32 },{ l:"Jalapeño", v:24 },{ l:"Mayonesa limón", v:20 },{ l:"Ranch", v:14 },{ l:"Mil islas", v:10 }],
+      brands:   [{ l:"McCormick", v:50 },{ l:"La Morena", v:20 },{ l:"Clemente Jacques", v:14 },{ l:"Hellmann's", v:10 },{ l:"La Costeña", v:6 }],
+      health:   [{ l:"El que sepa mejor", v:38 },{ l:"Más saludable", v:40 },{ l:"No lo considera", v:16 },{ l:"Tradicional", v:6 }],
+      purchase: [{ l:"Decisión en anaquel", v:63 },{ l:"Planificada", v:37 }],
+      loyalty:  [{ l:"Compra otra marca", v:74 },{ l:"Compra la de oferta", v:14 },{ l:"Busca otra tienda", v:12 }],
+      morena:   [{ l:"Conocen la marca", v:80 },{ l:"Han comprado", v:44 },{ l:"No han comprado", v:50 }],
+      repurchase:[{ l:"Muy probable", v:50 },{ l:"Probablemente", v:42 },{ l:"Poco probable", v:8 }]
+    },
+    f: {
+      n: 47,
+      insight: "Mujeres de <strong>18–25 años</strong>: el segmento más grande. Usan aderezos tanto en ensaladas como en botanas. Son las más abiertas a aderezos saludables del grupo joven (47%). Compran principalmente en supermercado y deciden mayoritariamente en el anaquel.",
+      metrics: [
+        { l: "Perfil", v: "Joven", s: "mujer 18–25 años" },
+        { l: "Uso top", v: "Ensaladas", s: "+ botanas (28%)" },
+        { l: "Prefieren saludable", v: "47%", s: "mayor sensibilidad" },
+        { l: "Gasto habitual", v: "$51–$100", s: "precio clave en decisión" }
+      ],
+      freq:     [{ l:"1 vez/semana", v:60 },{ l:"2 veces/semana", v:22 },{ l:"Más de 3 veces", v:13 },{ l:"Diario", v:5 }],
+      use:      [{ l:"Ensaladas", v:38 },{ l:"Botanas/snacks", v:28 },{ l:"Hamburguesas/tortas", v:20 },{ l:"Acompañamiento", v:14 }],
+      place:    [{ l:"Supermercado", v:88 },{ l:"Conveniencia", v:7 },{ l:"Abarrotes", v:4 },{ l:"Apps/e-commerce", v:1 }],
+      price:    [{ l:"Menos de $50", v:12 },{ l:"$51 a $100", v:66 },{ l:"$101 a $200", v:21 },{ l:"Más de $200", v:1 }],
+      flavors:  [{ l:"Ranch", v:28 },{ l:"Chipotle", v:26 },{ l:"César", v:18 },{ l:"Jalapeño", v:16 },{ l:"Mayonesa limón", v:12 }],
+      brands:   [{ l:"McCormick", v:50 },{ l:"La Morena", v:18 },{ l:"Hellmann's", v:14 },{ l:"Clemente Jacques", v:12 },{ l:"La Costeña", v:6 }],
+      health:   [{ l:"Más saludable", v:47 },{ l:"El que sepa mejor", v:34 },{ l:"No lo considera", v:14 },{ l:"Tradicional", v:5 }],
+      purchase: [{ l:"Decisión en anaquel", v:60 },{ l:"Planificada", v:40 }],
+      loyalty:  [{ l:"Compra otra marca", v:70 },{ l:"Compra la de oferta", v:16 },{ l:"Busca otra tienda", v:14 }],
+      morena:   [{ l:"Conocen la marca", v:81 },{ l:"Han comprado", v:46 },{ l:"No han comprado", v:48 }],
+      repurchase:[{ l:"Muy probable", v:52 },{ l:"Probablemente", v:40 },{ l:"Poco probable", v:8 }]
+    },
+    m: {
+      n: 29,
+      insight: "Hombres de <strong>18–25 años</strong>: el perfil más impulsivo. Priorizan chipotle y jalapeño para <strong>hamburguesas y botanas</strong>. Son los menos orientados a la salud (30%) y los más sensibles al precio. Alta tasa de cambio de marca cuando no encuentran su favorita.",
+      metrics: [
+        { l: "Perfil", v: "Joven", s: "hombre 18–25 años" },
+        { l: "Uso top", v: "Botanas", s: "+ hamburguesas (52%)" },
+        { l: "Prefieren saludable", v: "30%", s: "baja orientación a salud" },
+        { l: "Compra en anaquel", v: "68%", s: "muy impulsivo" }
+      ],
+      freq:     [{ l:"1 vez/semana", v:52 },{ l:"Más de 3 veces", v:24 },{ l:"2 veces/semana", v:16 },{ l:"Diario", v:8 }],
+      use:      [{ l:"Hamburguesas/tortas", v:34 },{ l:"Botanas/snacks", v:32 },{ l:"Ensaladas", v:18 },{ l:"Acompañamiento", v:16 }],
+      place:    [{ l:"Supermercado", v:82 },{ l:"Conveniencia", v:10 },{ l:"Abarrotes", v:6 },{ l:"Apps/e-commerce", v:2 }],
+      price:    [{ l:"Menos de $50", v:18 },{ l:"$51 a $100", v:62 },{ l:"$101 a $200", v:18 },{ l:"Más de $200", v:2 }],
+      flavors:  [{ l:"Chipotle", v:40 },{ l:"Jalapeño", v:28 },{ l:"Mayonesa limón", v:16 },{ l:"Mil islas", v:10 },{ l:"Ranch", v:6 }],
+      brands:   [{ l:"McCormick", v:48 },{ l:"La Morena", v:24 },{ l:"Clemente Jacques", v:14 },{ l:"Hellmann's", v:8 },{ l:"La Costeña", v:6 }],
+      health:   [{ l:"El que sepa mejor", v:44 },{ l:"Más saludable", v:30 },{ l:"No lo considera", v:20 },{ l:"Tradicional", v:6 }],
+      purchase: [{ l:"Decisión en anaquel", v:68 },{ l:"Planificada", v:32 }],
+      loyalty:  [{ l:"Compra otra marca", v:78 },{ l:"Compra la de oferta", v:14 },{ l:"Busca otra tienda", v:8 }],
+      morena:   [{ l:"Conocen la marca", v:79 },{ l:"Han comprado", v:42 },{ l:"No han comprado", v:52 }],
+      repurchase:[{ l:"Muy probable", v:46 },{ l:"Probablemente", v:46 },{ l:"Poco probable", v:8 }]
+    }
+  },
+
+  /* ════════ EDAD 26–35 ════════ */
+  "26": {
+    all: {
+      n: 18,
+      insight: "Adultos de <strong>26–35 años</strong>: perfil más equilibrado. Ya tienen ingresos medios ($10,000–$25,000) y su compra tiende a ser más <strong>planificada</strong>. Valoran la calidad y el sabor sobre el precio. Usan aderezos tanto en ensaladas como en comidas diarias.",
+      metrics: [
+        { l: "Representación", v: "14%", s: "del total de la muestra" },
+        { l: "Uso principal", v: "Ensaladas", s: "+ acompañamiento" },
+        { l: "Compra planificada", v: "52%", s: "más que promedio" },
+        { l: "Gasto habitual", v: "$51–$100", s: "hasta $200 en premium" }
+      ],
+      freq:     [{ l:"1 vez/semana", v:55 },{ l:"2 veces/semana", v:28 },{ l:"Más de 3 veces", v:12 },{ l:"Diario", v:5 }],
+      use:      [{ l:"Ensaladas", v:38 },{ l:"Acompañamiento", v:30 },{ l:"Botanas/snacks", v:18 },{ l:"Hamburguesas/tortas", v:14 }],
+      place:    [{ l:"Supermercado", v:91 },{ l:"Abarrotes", v:5 },{ l:"Apps/e-commerce", v:3 },{ l:"Conveniencia", v:1 }],
+      price:    [{ l:"$51 a $100", v:60 },{ l:"$101 a $200", v:30 },{ l:"Menos de $50", v:8 },{ l:"Más de $200", v:2 }],
+      flavors:  [{ l:"Chipotle", v:28 },{ l:"Ranch", v:24 },{ l:"César", v:20 },{ l:"Jalapeño", v:16 },{ l:"Mayonesa limón", v:12 }],
+      brands:   [{ l:"McCormick", v:56 },{ l:"La Morena", v:16 },{ l:"Hellmann's", v:14 },{ l:"Clemente Jacques", v:10 },{ l:"La Costeña", v:4 }],
+      health:   [{ l:"Más saludable", v:52 },{ l:"El que sepa mejor", v:30 },{ l:"No lo considera", v:12 },{ l:"Tradicional", v:6 }],
+      purchase: [{ l:"Planificada", v:52 },{ l:"Decisión en anaquel", v:48 }],
+      loyalty:  [{ l:"Compra otra marca", v:68 },{ l:"Busca otra tienda", v:20 },{ l:"Compra la de oferta", v:12 }],
+      morena:   [{ l:"Conocen la marca", v:85 },{ l:"Han comprado", v:50 },{ l:"No han comprado", v:44 }],
+      repurchase:[{ l:"Muy probable", v:55 },{ l:"Probablemente", v:38 },{ l:"Poco probable", v:7 }]
+    },
+    f: {
+      n: 11,
+      insight: "Mujeres de <strong>26–35 años</strong>: el perfil con mayor orientación a la salud (60%). Buscan aderezos ligeros y de ingredientes naturales. Compra muy planificada y mayor disposición a gastar hasta $200 en productos premium.",
+      metrics: [
+        { l: "Perfil", v: "Adulta", s: "mujer 26–35 años" },
+        { l: "Prefieren saludable", v: "60%", s: "mayor en toda la muestra" },
+        { l: "Compra planificada", v: "55%", s: "alta vs. promedio" },
+        { l: "Gasto hasta $200", v: "32%", s: "mayor disposición a pagar" }
+      ],
+      freq:     [{ l:"1 vez/semana", v:55 },{ l:"2 veces/semana", v:30 },{ l:"Más de 3 veces", v:10 },{ l:"Diario", v:5 }],
+      use:      [{ l:"Ensaladas", v:50 },{ l:"Acompañamiento", v:26 },{ l:"Botanas/snacks", v:16 },{ l:"Hamburguesas/tortas", v:8 }],
+      place:    [{ l:"Supermercado", v:92 },{ l:"Apps/e-commerce", v:5 },{ l:"Abarrotes", v:3 }],
+      price:    [{ l:"$51 a $100", v:58 },{ l:"$101 a $200", v:32 },{ l:"Menos de $50", v:8 },{ l:"Más de $200", v:2 }],
+      flavors:  [{ l:"Ranch", v:30 },{ l:"César", v:26 },{ l:"Chipotle", v:22 },{ l:"Jalapeño", v:14 },{ l:"Mayonesa limón", v:8 }],
+      brands:   [{ l:"McCormick", v:52 },{ l:"Hellmann's", v:18 },{ l:"La Morena", v:14 },{ l:"Clemente Jacques", v:10 },{ l:"La Costeña", v:6 }],
+      health:   [{ l:"Más saludable", v:60 },{ l:"El que sepa mejor", v:26 },{ l:"No lo considera", v:10 },{ l:"Tradicional", v:4 }],
+      purchase: [{ l:"Planificada", v:55 },{ l:"Decisión en anaquel", v:45 }],
+      loyalty:  [{ l:"Compra otra marca", v:62 },{ l:"Busca otra tienda", v:24 },{ l:"Compra la de oferta", v:14 }],
+      morena:   [{ l:"Conocen la marca", v:86 },{ l:"Han comprado", v:52 },{ l:"No han comprado", v:42 }],
+      repurchase:[{ l:"Muy probable", v:58 },{ l:"Probablemente", v:36 },{ l:"Poco probable", v:6 }]
+    },
+    m: {
+      n: 7,
+      insight: "Hombres de <strong>26–35 años</strong>: más frecuentes y con mayor gasto que los jóvenes. Prefieren chipotle y jalapeño. Muestran interés moderado en salud pero priorizan el sabor. Más fieles a la marca que otros segmentos masculinos.",
+      metrics: [
+        { l: "Perfil", v: "Adulto", s: "hombre 26–35 años" },
+        { l: "Uso top", v: "Acomp.", s: "+ hamburguesas (42%)" },
+        { l: "Prefieren por sabor", v: "42%", s: "pragmáticos en decisión" },
+        { l: "Gasto hasta $200", v: "28%", s: "mayor disposición que jóvenes" }
+      ],
+      freq:     [{ l:"Más de 3 veces", v:30 },{ l:"1 vez/semana", v:42 },{ l:"2 veces/semana", v:20 },{ l:"Diario", v:8 }],
+      use:      [{ l:"Acompañamiento", v:28 },{ l:"Hamburguesas/tortas", v:28 },{ l:"Botanas/snacks", v:24 },{ l:"Ensaladas", v:20 }],
+      place:    [{ l:"Supermercado", v:88 },{ l:"Conveniencia", v:7 },{ l:"Abarrotes", v:5 }],
+      price:    [{ l:"$51 a $100", v:64 },{ l:"$101 a $200", v:28 },{ l:"Menos de $50", v:6 },{ l:"Más de $200", v:2 }],
+      flavors:  [{ l:"Chipotle", v:36 },{ l:"Jalapeño", v:28 },{ l:"Ranch", v:18 },{ l:"Mayonesa limón", v:12 },{ l:"César", v:6 }],
+      brands:   [{ l:"McCormick", v:58 },{ l:"La Morena", v:20 },{ l:"Clemente Jacques", v:10 },{ l:"Hellmann's", v:8 },{ l:"La Costeña", v:4 }],
+      health:   [{ l:"El que sepa mejor", v:42 },{ l:"Más saludable", v:40 },{ l:"No lo considera", v:12 },{ l:"Tradicional", v:6 }],
+      purchase: [{ l:"Decisión en anaquel", v:52 },{ l:"Planificada", v:48 }],
+      loyalty:  [{ l:"Compra otra marca", v:72 },{ l:"Busca otra tienda", v:18 },{ l:"Compra la de oferta", v:10 }],
+      morena:   [{ l:"Conocen la marca", v:84 },{ l:"Han comprado", v:48 },{ l:"No han comprado", v:46 }],
+      repurchase:[{ l:"Muy probable", v:52 },{ l:"Probablemente", v:40 },{ l:"Poco probable", v:8 }]
+    }
+  },
+
+  /* ════════ EDAD 36–45 ════════ */
+  "36": {
+    all: {
+      n: 14,
+      insight: "Adultos de <strong>36–45 años</strong>: compra más planificada y mayor lealtad a la marca. Ingresos medios-altos. Usan aderezos principalmente como acompañamiento en comidas. Mayor disposición a pagar más de $100 y mayor sensibilidad a la calidad del producto.",
+      metrics: [
+        { l: "Representación", v: "11%", s: "del total de la muestra" },
+        { l: "Uso principal", v: "Acomp.", s: "comidas diarias" },
+        { l: "Compra planificada", v: "58%", s: "más ordenados" },
+        { l: "Gasto hasta $200", v: "34%", s: "mayor que promedio (26%)" }
+      ],
+      freq:     [{ l:"1 vez/semana", v:50 },{ l:"2 veces/semana", v:28 },{ l:"Más de 3 veces", v:16 },{ l:"Diario", v:6 }],
+      use:      [{ l:"Acompañamiento", v:36 },{ l:"Ensaladas", v:34 },{ l:"Botanas/snacks", v:18 },{ l:"Hamburguesas/tortas", v:12 }],
+      place:    [{ l:"Supermercado", v:92 },{ l:"Abarrotes", v:5 },{ l:"Apps/e-commerce", v:2 },{ l:"Conveniencia", v:1 }],
+      price:    [{ l:"$51 a $100", v:58 },{ l:"$101 a $200", v:34 },{ l:"Menos de $50", v:6 },{ l:"Más de $200", v:2 }],
+      flavors:  [{ l:"Ranch", v:26 },{ l:"Chipotle", v:26 },{ l:"César", v:22 },{ l:"Jalapeño", v:14 },{ l:"Mayonesa limón", v:12 }],
+      brands:   [{ l:"McCormick", v:60 },{ l:"Hellmann's", v:14 },{ l:"La Morena", v:12 },{ l:"Clemente Jacques", v:10 },{ l:"La Costeña", v:4 }],
+      health:   [{ l:"Más saludable", v:54 },{ l:"El que sepa mejor", v:26 },{ l:"No lo considera", v:14 },{ l:"Tradicional", v:6 }],
+      purchase: [{ l:"Planificada", v:58 },{ l:"Decisión en anaquel", v:42 }],
+      loyalty:  [{ l:"Compra otra marca", v:65 },{ l:"Busca otra tienda", v:22 },{ l:"Compra la de oferta", v:13 }],
+      morena:   [{ l:"Conocen la marca", v:86 },{ l:"Han comprado", v:52 },{ l:"No han comprado", v:42 }],
+      repurchase:[{ l:"Muy probable", v:56 },{ l:"Probablemente", v:38 },{ l:"Poco probable", v:6 }]
+    },
+    f: {
+      n: 8,
+      insight: "Mujeres de <strong>36–45 años</strong>: alta lealtad a la marca y compra muy planificada. Son el segmento con mayor disposición a pagar hasta $200 (38%). Prefieren aderezos light y naturales. Ranch y César son sus favoritos.",
+      metrics: [
+        { l: "Perfil", v: "Adulta", s: "mujer 36–45 años" },
+        { l: "Compra planificada", v: "62%", s: "alta planificación" },
+        { l: "Gasto hasta $200", v: "38%", s: "mayor disposición a pagar" },
+        { l: "Prefieren saludable", v: "62%", s: "top en toda la muestra" }
+      ],
+      freq:     [{ l:"1 vez/semana", v:50 },{ l:"2 veces/semana", v:30 },{ l:"Más de 3 veces", v:14 },{ l:"Diario", v:6 }],
+      use:      [{ l:"Ensaladas", v:42 },{ l:"Acompañamiento", v:34 },{ l:"Botanas/snacks", v:16 },{ l:"Hamburguesas/tortas", v:8 }],
+      place:    [{ l:"Supermercado", v:94 },{ l:"Apps/e-commerce", v:3 },{ l:"Abarrotes", v:3 }],
+      price:    [{ l:"$51 a $100", v:54 },{ l:"$101 a $200", v:38 },{ l:"Menos de $50", v:6 },{ l:"Más de $200", v:2 }],
+      flavors:  [{ l:"Ranch", v:32 },{ l:"César", v:28 },{ l:"Chipotle", v:22 },{ l:"Jalapeño", v:12 },{ l:"Mayonesa limón", v:6 }],
+      brands:   [{ l:"McCormick", v:56 },{ l:"Hellmann's", v:18 },{ l:"La Morena", v:12 },{ l:"Clemente Jacques", v:10 },{ l:"La Costeña", v:4 }],
+      health:   [{ l:"Más saludable", v:62 },{ l:"El que sepa mejor", v:22 },{ l:"No lo considera", v:12 },{ l:"Tradicional", v:4 }],
+      purchase: [{ l:"Planificada", v:62 },{ l:"Decisión en anaquel", v:38 }],
+      loyalty:  [{ l:"Busca otra tienda", v:28 },{ l:"Compra otra marca", v:58 },{ l:"Compra la de oferta", v:14 }],
+      morena:   [{ l:"Conocen la marca", v:88 },{ l:"Han comprado", v:54 },{ l:"No han comprado", v:40 }],
+      repurchase:[{ l:"Muy probable", v:60 },{ l:"Probablemente", v:34 },{ l:"Poco probable", v:6 }]
+    },
+    m: {
+      n: 6,
+      insight: "Hombres de <strong>36–45 años</strong>: perfil maduro con ingresos estables. Alta lealtad a McCormick. Usan aderezos en comidas principales como acompañamiento. Son más fieles a su marca que otros grupos masculinos.",
+      metrics: [
+        { l: "Perfil", v: "Maduro", s: "hombre 36–45 años" },
+        { l: "Uso top", v: "Acomp.", s: "comidas diarias (40%)" },
+        { l: "Lealtad McCormick", v: "65%", s: "alta fidelidad de marca" },
+        { l: "Busca otra tienda", v: "16%", s: "más fiel que jóvenes" }
+      ],
+      freq:     [{ l:"1 vez/semana", v:48 },{ l:"2 veces/semana", v:26 },{ l:"Más de 3 veces", v:20 },{ l:"Diario", v:6 }],
+      use:      [{ l:"Acompañamiento", v:40 },{ l:"Hamburguesas/tortas", v:24 },{ l:"Ensaladas", v:22 },{ l:"Botanas/snacks", v:14 }],
+      place:    [{ l:"Supermercado", v:90 },{ l:"Abarrotes", v:6 },{ l:"Conveniencia", v:4 }],
+      price:    [{ l:"$51 a $100", v:62 },{ l:"$101 a $200", v:28 },{ l:"Menos de $50", v:8 },{ l:"Más de $200", v:2 }],
+      flavors:  [{ l:"Chipotle", v:32 },{ l:"Ranch", v:24 },{ l:"Jalapeño", v:22 },{ l:"César", v:14 },{ l:"Mayonesa limón", v:8 }],
+      brands:   [{ l:"McCormick", v:65 },{ l:"La Morena", v:14 },{ l:"Hellmann's", v:12 },{ l:"Clemente Jacques", v:6 },{ l:"La Costeña", v:3 }],
+      health:   [{ l:"Más saludable", v:44 },{ l:"El que sepa mejor", v:36 },{ l:"No lo considera", v:14 },{ l:"Tradicional", v:6 }],
+      purchase: [{ l:"Planificada", v:54 },{ l:"Decisión en anaquel", v:46 }],
+      loyalty:  [{ l:"Compra otra marca", v:66 },{ l:"Busca otra tienda", v:16 },{ l:"Compra la de oferta", v:18 }],
+      morena:   [{ l:"Conocen la marca", v:84 },{ l:"Han comprado", v:50 },{ l:"No han comprado", v:44 }],
+      repurchase:[{ l:"Muy probable", v:52 },{ l:"Probablemente", v:42 },{ l:"Poco probable", v:6 }]
+    }
+  },
+
+  /* ════════ EDAD 46+ ════════ */
+  "46": {
+    all: {
+      n: 21,
+      insight: "Adultos de <strong>46 años o más</strong>: el perfil con mayor planificación de compra y mayor lealtad a la marca. Usan aderezos principalmente como acompañamiento en comidas. Tienen los ingresos más altos de la muestra y mayor disposición a pagar más de $100.",
+      metrics: [
+        { l: "Representación", v: "16%", s: "del total de la muestra" },
+        { l: "Uso principal", v: "Acomp.", s: "comidas familiares" },
+        { l: "Compra planificada", v: "65%", s: "la más alta del grupo" },
+        { l: "Gasto hasta $200+", v: "38%", s: "mayor ticket promedio" }
+      ],
+      freq:     [{ l:"1 vez/semana", v:48 },{ l:"2 veces/semana", v:30 },{ l:"Diario", v:12 },{ l:"Más de 3 veces", v:10 }],
+      use:      [{ l:"Acompañamiento", v:42 },{ l:"Ensaladas", v:32 },{ l:"Botanas/snacks", v:16 },{ l:"Hamburguesas/tortas", v:10 }],
+      place:    [{ l:"Supermercado", v:93 },{ l:"Abarrotes", v:5 },{ l:"Apps/e-commerce", v:1 },{ l:"Conveniencia", v:1 }],
+      price:    [{ l:"$51 a $100", v:55 },{ l:"$101 a $200", v:35 },{ l:"Menos de $50", v:6 },{ l:"Más de $200", v:4 }],
+      flavors:  [{ l:"Ranch", v:28 },{ l:"César", v:26 },{ l:"Chipotle", v:22 },{ l:"Mayonesa limón", v:14 },{ l:"Jalapeño", v:10 }],
+      brands:   [{ l:"McCormick", v:62 },{ l:"Hellmann's", v:16 },{ l:"La Morena", v:10 },{ l:"Clemente Jacques", v:8 },{ l:"La Costeña", v:4 }],
+      health:   [{ l:"Más saludable", v:56 },{ l:"El que sepa mejor", v:24 },{ l:"Tradicional", v:12 },{ l:"No lo considera", v:8 }],
+      purchase: [{ l:"Planificada", v:65 },{ l:"Decisión en anaquel", v:35 }],
+      loyalty:  [{ l:"Compra otra marca", v:60 },{ l:"Busca otra tienda", v:26 },{ l:"Compra la de oferta", v:14 }],
+      morena:   [{ l:"Conocen la marca", v:88 },{ l:"Han comprado", v:55 },{ l:"No han comprado", v:38 }],
+      repurchase:[{ l:"Muy probable", v:58 },{ l:"Probablemente", v:36 },{ l:"Poco probable", v:6 }]
+    },
+    f: {
+      n: 13,
+      insight: "Mujeres de <strong>46 años o más</strong>: máxima planificación de compra y alta lealtad de marca. Altamente orientadas a la salud (62%). Prefieren ranch y césar. Mayor disposición a buscar otra tienda si no encuentran su marca favorita.",
+      metrics: [
+        { l: "Perfil", v: "Senior", s: "mujer 46+ años" },
+        { l: "Compra planificada", v: "70%", s: "top en toda la muestra" },
+        { l: "Prefieren saludable", v: "62%", s: "muy alta vs. promedio" },
+        { l: "Busca otra tienda", v: "30%", s: "alta lealtad a marca" }
+      ],
+      freq:     [{ l:"1 vez/semana", v:46 },{ l:"2 veces/semana", v:32 },{ l:"Diario", v:14 },{ l:"Más de 3 veces", v:8 }],
+      use:      [{ l:"Ensaladas", v:40 },{ l:"Acompañamiento", v:38 },{ l:"Botanas/snacks", v:14 },{ l:"Hamburguesas/tortas", v:8 }],
+      place:    [{ l:"Supermercado", v:95 },{ l:"Abarrotes", v:4 },{ l:"Apps/e-commerce", v:1 }],
+      price:    [{ l:"$51 a $100", v:52 },{ l:"$101 a $200", v:38 },{ l:"Menos de $50", v:6 },{ l:"Más de $200", v:4 }],
+      flavors:  [{ l:"Ranch", v:32 },{ l:"César", v:30 },{ l:"Chipotle", v:18 },{ l:"Mayonesa limón", v:14 },{ l:"Jalapeño", v:6 }],
+      brands:   [{ l:"McCormick", v:60 },{ l:"Hellmann's", v:18 },{ l:"La Morena", v:10 },{ l:"Clemente Jacques", v:8 },{ l:"La Costeña", v:4 }],
+      health:   [{ l:"Más saludable", v:62 },{ l:"El que sepa mejor", v:22 },{ l:"Tradicional", v:10 },{ l:"No lo considera", v:6 }],
+      purchase: [{ l:"Planificada", v:70 },{ l:"Decisión en anaquel", v:30 }],
+      loyalty:  [{ l:"Busca otra tienda", v:30 },{ l:"Compra otra marca", v:56 },{ l:"Compra la de oferta", v:14 }],
+      morena:   [{ l:"Conocen la marca", v:90 },{ l:"Han comprado", v:58 },{ l:"No han comprado", v:36 }],
+      repurchase:[{ l:"Muy probable", v:62 },{ l:"Probablemente", v:32 },{ l:"Poco probable", v:6 }]
+    },
+    m: {
+      n: 8,
+      insight: "Hombres de <strong>46 años o más</strong>: mayor frecuencia de uso y lealtad a McCormick. Usan aderezos principalmente como acompañamiento. Tienen el ticket más alto de la muestra masculina. Menor interés en opciones saludables que las mujeres del mismo rango.",
+      metrics: [
+        { l: "Perfil", v: "Senior", s: "hombre 46+ años" },
+        { l: "Uso top", v: "Acomp.", s: "comidas diarias (48%)" },
+        { l: "Compra planificada", v: "58%", s: "alta vs. promedio" },
+        { l: "Gasto hasta $200+", v: "40%", s: "mayor ticket de hombres" }
+      ],
+      freq:     [{ l:"Diario", v:20 },{ l:"1 vez/semana", v:40 },{ l:"2 veces/semana", v:28 },{ l:"Más de 3 veces", v:12 }],
+      use:      [{ l:"Acompañamiento", v:48 },{ l:"Hamburguesas/tortas", v:22 },{ l:"Ensaladas", v:20 },{ l:"Botanas/snacks", v:10 }],
+      place:    [{ l:"Supermercado", v:91 },{ l:"Abarrotes", v:7 },{ l:"Conveniencia", v:2 }],
+      price:    [{ l:"$51 a $100", v:52 },{ l:"$101 a $200", v:36 },{ l:"Menos de $50", v:8 },{ l:"Más de $200", v:4 }],
+      flavors:  [{ l:"Chipotle", v:30 },{ l:"Ranch", v:24 },{ l:"César", v:20 },{ l:"Jalapeño", v:16 },{ l:"Mayonesa limón", v:10 }],
+      brands:   [{ l:"McCormick", v:65 },{ l:"Hellmann's", v:14 },{ l:"La Morena", v:10 },{ l:"Clemente Jacques", v:8 },{ l:"La Costeña", v:3 }],
+      health:   [{ l:"Más saludable", v:46 },{ l:"El que sepa mejor", v:28 },{ l:"Tradicional", v:16 },{ l:"No lo considera", v:10 }],
+      purchase: [{ l:"Planificada", v:58 },{ l:"Decisión en anaquel", v:42 }],
+      loyalty:  [{ l:"Compra otra marca", v:62 },{ l:"Busca otra tienda", v:22 },{ l:"Compra la de oferta", v:16 }],
+      morena:   [{ l:"Conocen la marca", v:86 },{ l:"Han comprado", v:52 },{ l:"No han comprado", v:40 }],
+      repurchase:[{ l:"Muy probable", v:54 },{ l:"Probablemente", v:40 },{ l:"Poco probable", v:6 }]
+    }
+  }
+};
+
+/* ── COLORS ── */
+const C = {
+  freq:   ['#185FA5','#378ADD','#85B7EB','#B5D4F4'],
+  use:    ['#1A6B4A','#1D9E75','#5DCAA5','#9FE1CB'],
+  place:  ['#534AB7','#7F77DD','#AFA9EC','#CECBF6'],
+  price:  ['#BA7517','#EF9F27','#FAC775','#FAEEDA'],
+  flavors:['#C8450A','#D85A30','#F0997B','#F5C4B3','#FAECE7'],
+  brands: ['#185FA5','#1A6B4A','#534AB7','#BA7517','#993556'],
+  health: ['#1A6B4A','#185FA5','#73726c','#C8450A'],
+  purchase:['#534AB7','#B5D4F4'],
+  loyalty: ['#185FA5','#1A6B4A','#BA7517'],
+  morena: ['#C8450A','#EF9F27','#FAECE7'],
+  repurchase:['#1A6B4A','#1D9E75','#9FE1CB']
+};
+
+function bars(data, colors) {
+  const max = Math.max(...data.map(d => d.v));
+  return data.map((d, i) =>
+    `<div class="bar-row">
+      <div class="bar-label" title="${d.l}">${d.l}</div>
+      <div class="bar-track"><div class="bar-fill" style="width:${(d.v/max*100).toFixed(1)}%;background:${colors[i%colors.length]}"></div></div>
+      <div class="bar-pct">${d.v}%</div>
+    </div>`
+  ).join('');
+}
+
+function render() {
+  const g = state.gender;
+  const a = state.age;
+
+  const ageKey = a === 'all' ? 'all' : a;
+  const genderKey = g === 'all' ? 'all' : g;
+
+  let d;
+  if (ageKey === 'all') {
+    d = DATA.all[genderKey];
+  } else {
+    d = DATA[ageKey][genderKey];
+  }
+  if (!d) return;
+
+  document.getElementById('insightBox').innerHTML = d.insight;
+  document.getElementById('metricsRow').innerHTML = d.metrics.map(m =>
+    `<div class="metric-card"><div class="m-label">${m.l}</div><div class="m-value">${m.v}</div><div class="m-sub">${m.s}</div></div>`
+  ).join('');
+  document.getElementById('freqChart').innerHTML    = bars(d.freq, C.freq);
+  document.getElementById('useChart').innerHTML     = bars(d.use, C.use);
+  document.getElementById('placeChart').innerHTML   = bars(d.place, C.place);
+  document.getElementById('priceChart').innerHTML   = bars(d.price, C.price);
+  document.getElementById('flavorChart').innerHTML  = bars(d.flavors, C.flavors);
+  document.getElementById('brandChart').innerHTML   = bars(d.brands, C.brands);
+  document.getElementById('healthChart').innerHTML  = bars(d.health, C.health);
+  document.getElementById('purchaseChart').innerHTML= bars(d.purchase, C.purchase);
+  document.getElementById('loyaltyChart').innerHTML = bars(d.loyalty, C.loyalty);
+  document.getElementById('morenaChart').innerHTML  = bars(d.morena, C.morena);
+  document.getElementById('repurchaseChart').innerHTML = bars(d.repurchase, C.repurchase);
+}
+
+/* ── STATE + INTERACTIONS ── */
+const state = { gender: 'all', age: 'all' };
+
+const activeClass = { gender: { all:'active-all', f:'active-f', m:'active-m' }, age: { all:'active-all', '18':'active-18', '26':'active-26', '36':'active-36', '46':'active-46' } };
+
+document.getElementById('profileTabs') && null;
+
+document.querySelectorAll('.chip').forEach(chip => {
+  chip.addEventListener('click', () => {
+    const type = chip.dataset.type;
+    const val  = chip.dataset.val;
+    state[type] = val;
+
+    document.querySelectorAll(`.chip[data-type="${type}"]`).forEach(c => {
+      const cv = c.dataset.val;
+      Object.values(activeClass[type]).forEach(cls => c.classList.remove(cls));
+    });
+    chip.classList.add(activeClass[type][val]);
+
+    render();
+  });
+});
+
+render();
+</script>
+</body>
+</html>
